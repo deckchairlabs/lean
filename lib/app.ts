@@ -17,9 +17,9 @@ import { ApplicationEvents, ListeningEvent } from "./events.ts";
  */
 export class Application extends ApplicationEvents {
   #server: Server | undefined;
-  #router: Router;
-  #middleware: Middleware[] = [];
-  #requestMiddleware: Middleware[] = [];
+  #router: Router<this>;
+  #middleware: Middleware<this>[] = [];
+  #requestMiddleware: Middleware<this>[] = [];
   #responseTransformers: ResponseTransformer[] = [];
   #process?: Promise<void>;
 
@@ -60,7 +60,7 @@ export class Application extends ApplicationEvents {
         request,
       });
 
-      let requestHandler: RequestHandler;
+      let requestHandler: RequestHandler<this>;
 
       if (this.#requestMiddleware.length === 0) {
         requestHandler = this.#router.find(request.method, context);
@@ -102,9 +102,9 @@ export class Application extends ApplicationEvents {
   }
 
   #applyMiddleware = (
-    handler: RequestHandler,
-    ...middleware: Middleware[]
-  ): RequestHandler => {
+    handler: RequestHandler<this>,
+    ...middleware: Middleware<this>[]
+  ): RequestHandler<this> => {
     for (let i = middleware.length - 1; i >= 0; --i) {
       handler = middleware[i](handler);
     }
@@ -115,7 +115,7 @@ export class Application extends ApplicationEvents {
   /**
    * `before` adds middleware which is run before routing.
    */
-  before(...middlewares: Middleware[]): Application {
+  before(...middlewares: Middleware<this>[]): this {
     this.#requestMiddleware.push(...middlewares);
     return this;
   }
@@ -123,87 +123,87 @@ export class Application extends ApplicationEvents {
   /**
    * `use` adds middleware to be run after the router.
    */
-  use(...middlewares: Middleware[]): Application {
+  use(...middlewares: Middleware<this>[]): this {
     this.#middleware.push(...middlewares);
     return this;
   }
 
   connect(
     path: string,
-    requestHandler: RequestHandler,
-    ...middleware: Middleware[]
+    requestHandler: RequestHandler<this>,
+    ...middleware: Middleware<this>[]
   ): Application {
     return this.add("CONNECT", path, requestHandler, ...middleware);
   }
 
   delete(
     path: string,
-    requestHandler: RequestHandler,
-    ...middleware: Middleware[]
+    requestHandler: RequestHandler<this>,
+    ...middleware: Middleware<this>[]
   ): Application {
     return this.add("DELETE", path, requestHandler, ...middleware);
   }
 
   get(
     path: string,
-    requestHandler: RequestHandler,
-    ...middleware: Middleware[]
+    requestHandler: RequestHandler<this>,
+    ...middleware: Middleware<this>[]
   ): Application {
     return this.add("GET", path, requestHandler, ...middleware);
   }
 
   head(
     path: string,
-    requestHandler: RequestHandler,
-    ...middleware: Middleware[]
+    requestHandler: RequestHandler<this>,
+    ...middleware: Middleware<this>[]
   ): Application {
     return this.add("HEAD", path, requestHandler, ...middleware);
   }
 
   options(
     path: string,
-    requestHandler: RequestHandler,
-    ...middleware: Middleware[]
+    requestHandler: RequestHandler<this>,
+    ...middleware: Middleware<this>[]
   ): Application {
     return this.add("OPTIONS", path, requestHandler, ...middleware);
   }
 
   patch(
     path: string,
-    requestHandler: RequestHandler,
-    ...middleware: Middleware[]
+    requestHandler: RequestHandler<this>,
+    ...middleware: Middleware<this>[]
   ): Application {
     return this.add("PATCH", path, requestHandler, ...middleware);
   }
 
   post(
     path: string,
-    requestHandler: RequestHandler,
-    ...middleware: Middleware[]
+    requestHandler: RequestHandler<this>,
+    ...middleware: Middleware<this>[]
   ): Application {
     return this.add("POST", path, requestHandler, ...middleware);
   }
 
   put(
     path: string,
-    requestHandler: RequestHandler,
-    ...middleware: Middleware[]
+    requestHandler: RequestHandler<this>,
+    ...middleware: Middleware<this>[]
   ): Application {
     return this.add("PUT", path, requestHandler, ...middleware);
   }
 
   trace(
     path: string,
-    requestHandler: RequestHandler,
-    ...middleware: Middleware[]
+    requestHandler: RequestHandler<this>,
+    ...middleware: Middleware<this>[]
   ): Application {
     return this.add("TRACE", path, requestHandler, ...middleware);
   }
 
   any(
     path: string,
-    requestHandler: RequestHandler,
-    ...middleware: Middleware[]
+    requestHandler: RequestHandler<this>,
+    ...middleware: Middleware<this>[]
   ): Application {
     const methods = [
       "CONNECT",
@@ -223,8 +223,8 @@ export class Application extends ApplicationEvents {
   match(
     methods: string[],
     path: string,
-    requestHandler: RequestHandler,
-    ...middleware: Middleware[]
+    requestHandler: RequestHandler<this>,
+    ...middleware: Middleware<this>[]
   ): Application {
     for (const method of methods) {
       this.add(method, path, requestHandler, ...middleware);
@@ -235,13 +235,13 @@ export class Application extends ApplicationEvents {
   add(
     method: string,
     path: string,
-    requestHandler: RequestHandler,
-    ...middlewares: Middleware[]
+    requestHandler: RequestHandler<this>,
+    ...middlewares: Middleware<this>[]
   ): Application {
     this.#router.add(
       method,
       path,
-      (context: Context): Promise<unknown> | unknown => {
+      (context: Context<this>): Promise<unknown> | unknown => {
         let routeHandler = requestHandler;
         for (const middleware of middlewares) {
           routeHandler = middleware(routeHandler);
@@ -270,7 +270,7 @@ export class Application extends ApplicationEvents {
 
   async #applyResponseTransformers(
     response: Response,
-    context: Context,
+    context: Context<this>,
     ...responseTransformers: ResponseTransformer[]
   ): Promise<Response> {
     const rewriter = new HTMLRewriter();
@@ -285,8 +285,8 @@ export class Application extends ApplicationEvents {
   }
 
   async #transformResult(
-    context: Context,
-    requestHandler: RequestHandler,
+    context: Context<this>,
+    requestHandler: RequestHandler<this>,
   ): Promise<void> {
     const result = await requestHandler(context);
 

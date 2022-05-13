@@ -6,10 +6,14 @@ import { removeTrailingSlash } from "./utils.ts";
 /**
  * Based on the work of abc {@link https://github.com/zhmushan/abc/blob/master/router.ts}
  */
-export class Router {
-  trees: Record<string, Node<RequestHandler>> = {};
+export class Router<TApplication> {
+  trees: Record<string, Node<RequestHandler<TApplication>>> = {};
 
-  add(method: string, path: string, handler: RequestHandler): void {
+  add(
+    method: string,
+    path: string,
+    handler: RequestHandler<TApplication>,
+  ): void {
     if (path[0] !== "/") {
       path = `/${path}`;
     }
@@ -19,20 +23,23 @@ export class Router {
     let root = this.trees[method];
 
     if (!root) {
-      root = new Node<RequestHandler>();
+      root = new Node<RequestHandler<TApplication>>();
       this.trees[method] = root;
     }
 
     root.add(path, handler);
   }
 
-  find(method: string, context: Context): RequestHandler {
+  find(
+    method: string,
+    context: Context<TApplication>,
+  ): RequestHandler<TApplication> {
     const node = this.trees[method];
     let path = context.url.pathname;
 
     path = removeTrailingSlash(path);
 
-    let requestHandler: RequestHandler | undefined;
+    let requestHandler: RequestHandler<TApplication> | undefined;
 
     if (node) {
       const [handle] = node.find(path);
