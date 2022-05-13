@@ -1,1 +1,1 @@
-# deno-project-template
+# Lean
