@@ -1,6 +1,6 @@
-export { Server } from "https://deno.land/std@0.138.0/http/server.ts";
+export { Server } from "https://deno.land/std@0.139.0/http/server.ts";
 export { Node } from "https://deno.land/x/router@v2.0.1/mod.ts";
-export type { Handler } from "https://deno.land/std@0.138.0/http/server.ts";
+export type { Handler } from "https://deno.land/std@0.139.0/http/server.ts";
 
 export {
   HTMLRewriter,
@@ -13,9 +13,7 @@ export {
 } from "https://esm.sh/@import-maps/resolve@1.0.1";
 export type { ParsedImportMap } from "https://cdn.esm.sh/v78/@import-maps/resolve@1.0.1";
 
-export { toFileUrl } from "https://deno.land/std@0.138.0/path/mod.ts";
-export { expandGlob } from "https://deno.land/std@0.138.0/fs/expand_glob.ts";
-export type { ExpandGlobOptions } from "https://deno.land/std@0.138.0/fs/expand_glob.ts";
+export { toFileUrl } from "https://deno.land/std@0.139.0/path/mod.ts";
 
 export {
   default as initSwc,

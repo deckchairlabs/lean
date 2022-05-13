@@ -2,7 +2,6 @@ import { Compiler } from "./compiler.ts";
 import { Context } from "./context.ts";
 import { Handler, HTMLRewriter, Server, toFileUrl } from "./deps.ts";
 import { Router } from "./router.ts";
-import { resolveSources } from "./fs.ts";
 import {
   ApplicationOptions,
   Middleware,
@@ -49,10 +48,6 @@ export class Application {
       this.#server.close();
     }
     await this.#process;
-  }
-
-  resolveSources() {
-    return resolveSources(this.rootUrl);
   }
 
   async #start(listener: Deno.Listener): Promise<void> {

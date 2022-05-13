@@ -1,11 +1,11 @@
 import { Application } from "./lib/app.ts";
+import { Router } from "./lib/router.ts";
 import { Context } from "./lib/context.ts";
 import type {
   HTMLRewriter,
   ParsedImportMap,
   ParseOptions,
 } from "./lib/deps.ts";
-import { Router } from "./lib/router.ts";
 
 export type Mode = "development" | "debug" | "production";
 
