@@ -10,11 +10,12 @@ import {
   RequestHandler,
   ResponseTransformer,
 } from "../types.ts";
+import { ApplicationEvents, ListeningEvent } from "./events.ts";
 
 /**
  * Based on the work of abc {@link https://github.com/zhmushan/abc/blob/master/app.ts}
  */
-export class Application {
+export class Application extends ApplicationEvents {
   #server: Server | undefined;
   #router: Router;
   #middleware: Middleware[] = [];
@@ -27,6 +28,8 @@ export class Application {
   readonly mode: Mode;
 
   constructor(options: ApplicationOptions) {
+    super();
+
     const { rootUrl, router, mode } = options;
 
     this.#router = router ?? new Router();
@@ -40,6 +43,7 @@ export class Application {
 
   start(listenOptions: Deno.ListenOptions): void {
     this.#process = this.#start(Deno.listen(listenOptions));
+    this.dispatchEvent(new ListeningEvent(listenOptions));
   }
 
   async close(): Promise<void> {
