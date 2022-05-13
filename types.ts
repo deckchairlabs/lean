@@ -11,7 +11,10 @@ export type ApplicationOptions = {
   mode: Mode;
 };
 
-export type ContextOptions = { app: Application; request: Request };
+export type ContextOptions<TApplication> = {
+  app: TApplication;
+  request: Request;
+};
 
 export type State = {
   [key: string]: unknown;
@@ -28,11 +31,13 @@ export type CompileOptions = {
   url: URL;
 };
 
-export type RequestHandler = (
-  context: Context,
+export type RequestHandler<TApplication = Application> = (
+  context: Context<TApplication>,
 ) => Promise<unknown> | unknown;
 
-export type Middleware = (next: RequestHandler) => RequestHandler;
+export type Middleware<TApplication = Application> = (
+  next: RequestHandler<TApplication>,
+) => RequestHandler<TApplication>;
 
 export type ResponseTransformer = ((
   response: Response,
