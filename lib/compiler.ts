@@ -16,8 +16,8 @@ export class Compiler {
 
   readonly parserOptions: ParseOptions;
   readonly importMap: ParsedImportMap;
-  readonly modules: Set<string>;
-  readonly scripts: Set<string>;
+  readonly modules: Set<URL>;
+  readonly scripts: Set<URL>;
   readonly visitors: Set<Visitor>;
 
   constructor(options: CompilerOptions) {
@@ -62,6 +62,12 @@ export class Compiler {
     const transformed = this.#transform(input, url);
     const ast = this.#parse(transformed);
     const transformedAst = this.#visit(ast);
+
+    if (transformedAst.type === "Module") {
+      this.modules.add(url);
+    } else if (transformedAst.type === "Script") {
+      this.scripts.add(url);
+    }
 
     return this.#print(transformedAst);
   }
