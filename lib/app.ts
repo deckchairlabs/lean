@@ -12,7 +12,7 @@ import {
 } from "../types.ts";
 
 /**
- * @see https://github.com/zhmushan/abc/blob/master/app.ts
+ * Based on the work of abc {@link https://github.com/zhmushan/abc/blob/master/app.ts}
  */
 export class Application {
   #server: Server | undefined;

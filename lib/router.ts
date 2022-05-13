@@ -3,6 +3,9 @@ import { Context } from "./context.ts";
 import type { RequestHandler } from "../types.ts";
 import { removeTrailingSlash } from "./utils.ts";
 
+/**
+ * Based on the work of abc {@link https://github.com/zhmushan/abc/blob/master/router.ts}
+ */
 export class Router {
   trees: Record<string, Node<RequestHandler>> = {};
 
