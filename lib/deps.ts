@@ -7,12 +7,6 @@ export {
 } from "https://deno.land/x/html_rewriter@v0.1.0-pre.15/base64.ts";
 export type { Element } from "https://deno.land/x/html_rewriter@v0.1.0-pre.15/base64.ts";
 
-export {
-  parse as parseImportMap,
-  resolve as resolveSpecifier,
-} from "https://esm.sh/@import-maps/resolve@1.0.1";
-export type { ParsedImportMap } from "https://cdn.esm.sh/v78/@import-maps/resolve@1.0.1";
-
 export { toFileUrl } from "https://deno.land/std@0.139.0/path/mod.ts";
 
 export {

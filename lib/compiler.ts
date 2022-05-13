@@ -7,7 +7,7 @@ import {
   transformSync,
   Visitor,
 } from "./deps.ts";
-import type { ParsedImportMap, ParseOptions, Program } from "./deps.ts";
+import type { ParseOptions, Program } from "./deps.ts";
 import type { CompileOptions, CompilerOptions, Mode } from "../types.ts";
 
 export class Compiler {
@@ -15,7 +15,6 @@ export class Compiler {
   #initialised = false;
 
   readonly parserOptions: ParseOptions;
-  readonly importMap: ParsedImportMap;
   readonly modules: Set<URL>;
   readonly scripts: Set<URL>;
   readonly visitors: Set<Visitor>;
@@ -23,7 +22,6 @@ export class Compiler {
   constructor(options: CompilerOptions) {
     const {
       mode,
-      importMap,
       parserOptions = {
         syntax: "typescript",
         tsx: true,
@@ -34,7 +32,6 @@ export class Compiler {
 
     this.#mode = mode;
     this.parserOptions = parserOptions;
-    this.importMap = importMap;
     this.modules = new Set();
     this.scripts = new Set();
     this.visitors = new Set();

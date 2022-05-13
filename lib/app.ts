@@ -27,7 +27,7 @@ export class Application {
   readonly mode: Mode;
 
   constructor(options: ApplicationOptions) {
-    const { rootUrl, router, importMap, mode } = options;
+    const { rootUrl, router, mode } = options;
 
     this.#router = router ?? new Router();
     this.rootUrl = typeof rootUrl === "string" ? toFileUrl(rootUrl) : rootUrl;
@@ -35,7 +35,6 @@ export class Application {
 
     this.compiler = new Compiler({
       mode,
-      importMap,
     });
   }
 
