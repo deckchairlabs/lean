@@ -42,8 +42,8 @@ export class Application extends ApplicationEvents {
   }
 
   start(listenOptions: Deno.ListenOptions): void {
-    this.#process = this.#start(Deno.listen(listenOptions));
     this.dispatchEvent(new ListeningEvent(listenOptions));
+    this.#process = this.#start(Deno.listen(listenOptions));
   }
 
   async close(): Promise<void> {
