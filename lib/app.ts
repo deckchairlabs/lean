@@ -30,9 +30,9 @@ export class Application extends ApplicationEvents {
   constructor(options: ApplicationOptions) {
     super();
 
-    const { rootUrl, router, mode } = options;
+    const { rootUrl, mode } = options;
 
-    this.#router = router ?? new Router();
+    this.#router = new Router();
     this.rootUrl = typeof rootUrl === "string" ? toFileUrl(rootUrl) : rootUrl;
     this.mode = mode;
 
